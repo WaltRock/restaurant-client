@@ -8,16 +8,22 @@ import Aside from '../../components/Aside/';
 import Footer from '../../components/Footer/';
 
 import Dashboard from '../../views/Dashboard/';
+import Login from '../../views/Login/';
+let firstComponent = Login
 
 class Full extends Component {
   render() {
+    if (!localStorage.getItem('Authorization')) {
+      return <Redirect to='/login'/>
+    }
+
     return (
       <div className="app">
-        <Header />
+        <Header/>
         <div className="app-body">
           <Sidebar {...this.props}/>
           <main className="main">
-            <Breadcrumb />
+            <Breadcrumb/>
             <Container fluid>
               <Switch>
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
@@ -25,9 +31,9 @@ class Full extends Component {
               </Switch>
             </Container>
           </main>
-          <Aside />
+          <Aside/>
         </div>
-        <Footer />
+        <Footer/>
       </div>
     );
   }

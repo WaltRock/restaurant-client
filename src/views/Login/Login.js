@@ -13,6 +13,7 @@ import {
 } from 'reactstrap';
 import classNames from 'classnames';
 import axios from 'axios';
+import {Redirect} from 'react-router-dom';
 
 class Login extends Component {
   constructor(props) {
@@ -20,7 +21,11 @@ class Login extends Component {
     this.state = {
       email: 'walt@tekton.com',
       password: '123123',
-      isErrorUser: false
+      isErrorUser: false,
+      redirect: false
+    }
+    if (localStorage.getItem('Authorization')) {
+      this.state.redirect = true
     }
     this.handleChange = this
       .handleChange
@@ -30,7 +35,7 @@ class Login extends Component {
       .bind(this)
   }
 
-  verifyMailTekton(val){
+  verifyMailTekton(val) {
     return !!(val.substring(val.indexOf("@"), val.length).indexOf("tekton") + 1);
   }
 
@@ -53,15 +58,22 @@ class Login extends Component {
       this.setState({isErrorUser: true})
       return true;
     }
-    axios.post('Users/login',this.state).then(response => {
-      localStorage.setItem('Authorization', response.data.id)
-      axios.defaults.headers.common['Authorization'] = response.data.id;
-    }).catch(err => {
-      console.log(err)
-    })
+    axios
+      .post('Users/login', this.state)
+      .then(response => {
+        localStorage.setItem('Authorization', response.data.id)
+        axios.defaults.headers.common['Authorization'] = response.data.id;
+        this.setState({redirect: true})
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to='/dashboard'/>;
+    }
     return (
       <div className="app flex-row align-items-center">
         <Container>
