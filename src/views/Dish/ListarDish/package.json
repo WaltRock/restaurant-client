@@ -1,0 +1,6 @@
+{
+    "name": "ListarDish",
+    "version": "0.0.1",
+    "private": true,
+    "main": "./ListarDish.js"
+}
