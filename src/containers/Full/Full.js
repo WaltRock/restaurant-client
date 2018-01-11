@@ -10,6 +10,10 @@ import Footer from '../../components/Footer/';
 import Dashboard from '../../views/Dashboard/';
 import RegistrarUsers from '../../views/Users/Registrar';
 import ListarUsers from '../../views/Users/Listar';
+
+import RegistrarOrders from '../../views/Orders/Registrar';
+import ListarOrders from '../../views/Orders/Listar';
+
 import RegistrarDish from '../../views/Dish/RegistrarDish';
 import ListarDish from '../../views/Dish/ListarDish';
 import Login from '../../views/Login/';
@@ -34,6 +38,8 @@ class Full extends Component {
             <Container fluid>
               <Switch>
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
+                <Route path="/ordenes/registrar" name="Registrar Ordenes" component={RegistrarOrders}/>
+                <Route path="/ordenes/listar" name="Listar Ordenes" component={ListarOrders}/>
                 <Route path="/usuarios/registrar" name="Users" component={RegistrarUsers}/>
                 <Route path="/usuarios/listar" name="Users" component={ListarUsers}/>
                 <Route path="/platos/registrar" name="Reigistar Plato" component={RegistrarDish}/>

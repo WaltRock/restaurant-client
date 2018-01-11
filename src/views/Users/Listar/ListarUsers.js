@@ -19,11 +19,11 @@ import {
 function ListaUsuarios(props) {
   const usuarios = props.usuarios
   const listUsuarios = usuarios.map(usuario => <tr key={usuario.id}>
-    <td>{usuario.name}</td>
-    <td>{usuario.lastName}</td>
-    <td>{usuario.dni}</td>
-    <td>{usuario.role}</td>
-    <td>
+    <td className="col-md-3">{usuario.name}</td>
+    <td className="col-md-3">{usuario.lastName}</td>
+    <td className="col-md-2">{usuario.dni}</td>
+    <td className="col-md-2">{usuario.role}</td>
+    <td className="col-md-2">
       <Badge onClick={() => editarPlato(plato)} color="success">Editar</Badge>
     </td>
   </tr>)
@@ -64,16 +64,17 @@ class UsuariosList extends Component {
             <Card>
               <CardHeader>
                 <i className="fa fa-align-justify"></i>
-                Lista de platos
+                Lista de usuarios
               </CardHeader>
               <CardBody>
                 <Table responsive striped>
                   <thead>
                     <tr>
-                      <th>Nombre</th>
-                      <th>Apellido</th>
-                      <th>DNI</th>
-                      <th>Rol</th>
+                      <th className="col-md-3">Nombre</th>
+                      <th className="col-md-3">Apellido</th>
+                      <th className="col-md-2">DNI</th>
+                      <th className="col-md-2">Rol</th>
+                      <th className="col-md-2">Editar</th>
                     </tr>
                   </thead>
                   <tbody>

@@ -1,1 +1,16 @@
 // Here you can add other styles
+.table-striped thead {
+  width: 97%;
+}
+.table-striped tbody {
+  height: 300px;
+  overflow-y: auto;
+  width: 100%;
+}
+.table-striped thead, .table-striped tbody, .table-striped tr, .table-striped td, .table-striped th {
+  display: block;
+}
+.table-striped tbody td, .table-striped thead > tr> th {
+  float: left;
+  border-bottom-width: 0;
+}

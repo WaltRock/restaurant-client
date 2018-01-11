@@ -16,35 +16,37 @@ import {
   Alert
 } from 'reactstrap';
 
-function ListaPlatos(props) {
-  const platos = props.platos
-  const listPlatos = platos.map(plato => <tr key={plato.id}>
-    <td className="col-md-8">{plato.nombre}</td>
-    <td className="col-md-2">{plato.costo}</td>
-    <td className="col-md-2">
+function ListaUsuarios(props) {
+  const usuarios = props.usuarios
+  const listUsuarios = usuarios.map(usuario => <tr key={usuario.id}>
+    <td>{usuario.name}</td>
+    <td>{usuario.lastName}</td>
+    <td>{usuario.dni}</td>
+    <td>{usuario.role}</td>
+    <td>
       <Badge onClick={() => editarPlato(plato)} color="success">Editar</Badge>
     </td>
   </tr>)
-  return listPlatos
+  return listUsuarios
 }
 function editarPlato(e) {
   console.log(e)
 }
 
-class Dish extends Component {
+class ListarOrders extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listaPlatos: []
+      listaUsuarios: []
     };
     this.handleChange = this
       .handleChange
       .bind(this)
 
     axios
-      .get('Platos')
+      .get('users')
       .then(response => {
-        this.setState({listaPlatos: response.data})
+        this.setState({listaUsuarios: response.data})
       })
   }
 
@@ -68,13 +70,14 @@ class Dish extends Component {
                 <Table responsive striped>
                   <thead>
                     <tr>
-                      <th className="col-md-8">Nombre del plato</th>
-                      <th className="col-md-2">Costo</th>
-                      <th className="col-md-2">Editar</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>DNI</th>
+                      <th>Rol</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <ListaPlatos platos={this.state.listaPlatos}></ListaPlatos>
+                    <ListaUsuarios usuarios={this.state.listaUsuarios}></ListaUsuarios>
                   </tbody>
                 </Table>
               </CardBody>
@@ -86,4 +89,4 @@ class Dish extends Component {
   }
 }
 
-export default Dish;
+export default ListarOrders;
