@@ -94,7 +94,7 @@ class Dish extends Component {
                     <Label htmlFor="prependedInput">Nombre del plato</Label>
                     <div className="controls">
                       <InputGroup className="input-prepend">
-                        <Input name="nombre" onChange={this.handleChange} type="text"/>
+                        <Input value={this.state.nombre} name="nombre" onChange={this.handleChange} type="text"/>
                       </InputGroup>
                     </div>
                   </FormGroup>
@@ -103,7 +103,7 @@ class Dish extends Component {
                     <Label htmlFor="prependedInput">Costo del plato</Label>
                     <div className="controls">
                       <InputGroup className="input-prepend">
-                        <Input name="costo" onChange={this.handleChange} type="text"/>
+                        <Input value={this.state.costo} name="costo" onChange={this.handleChange} type="text"/>
                       </InputGroup>
                     </div>
                   </FormGroup>

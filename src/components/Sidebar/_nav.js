@@ -8,7 +8,19 @@ export default {
     {
       name: 'Usuarios',
       url: '/users',
-      icon: 'icon-speedometer'
+      icon: 'icon-speedometer',
+      children : [
+        {
+          name: 'Registrar Usuarios',
+          url: '/usuarios/registrar',
+          icon: 'fa fa-check'
+        },
+        {
+          name: 'Lista Usuarios',
+          url: '/usuarios/listar',
+          icon: 'fa fa-list-ul'
+        },
+      ]
     },
     {
       name: 'Ordenes',

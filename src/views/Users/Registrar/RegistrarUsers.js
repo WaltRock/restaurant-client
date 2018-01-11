@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import NotificationAlert from 'react-notification-alert';
+import ToastTekton from '../../../helpers/Toast'
 import {
   Row,
   Col,
@@ -14,35 +16,71 @@ import {
   InputGroup
 } from 'reactstrap';
 
-class Forms extends Component {
+class RegistrarUsers extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      username: '',
-      password: '',
-      emailVerified: true,
-      name: '',
-      lastName: ''
+      user: {
+        email: '',
+        password: '',
+        emailVerified: true,
+        name: '',
+        lastName: '',
+        roleId: ''
+      },
+      roles: []
     };
+    this.Toast = new ToastTekton(this);
+
+    axios
+      .get('Roles')
+      .then((response) => {
+        Object.assign(this.state.user, {role: response.data[0].id})
+        this.setState({roles: response.data})
+      })
+
     this.handleChange = this
       .handleChange
       .bind(this)
+
     this.saveUser = this
       .saveUser
       .bind(this);
+
+  }
+
+  TagListaRoles() {
+    let items = []
+    this
+      .state
+      .roles
+      .forEach(rol => {
+        items.push(
+          <option key={rol.id} value={rol.id}>{rol.description}</option>
+        )
+      })
+    return items
   }
 
   handleChange(e) {
-    this.setState({
+    let nUser = Object.assign(this.state.user, {
       [e.target.name]: e.target.value
     })
+    this.setState({user: nUser})
   }
 
   saveUser() {
+    
     axios
-      .post('users', this.state)
-      .then(response => { console.log(response.data)})
+      .post('users/createUser', this.state.user)
+      .then(response => {
+        this
+          .Toast
+          .showAlert({
+            normal: 'Se registro el usuario',
+            bold: response.data.name + " " + response.data.lastName
+          }, this)
+      })
   }
 
   render() {
@@ -101,18 +139,25 @@ class Forms extends Component {
                     </div>
                   </FormGroup>
 
+                  <FormGroup className="col-md-6">
+                    <Label htmlFor="ccyear">Rol</Label>
+                    <Input type="select" name="roleId" onChange={this.handleChange}>
+                      {this.TagListaRoles()}
+                    </Input>
+                  </FormGroup>
+
                   <div className="form-actions col-md-12">
                     <Button type="button" onClick={this.saveUser} color="primary">Guardar</Button>
-                    <Button color="secondary">Cancel</Button>
                   </div>
                 </Form>
               </CardBody>
             </Card>
           </Col>
         </Row>
+        <NotificationAlert ref="notify"></NotificationAlert>
       </div>
     )
   }
 }
 
-export default Forms;
+export default RegistrarUsers;
