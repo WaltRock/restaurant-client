@@ -1,34 +1,19 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-
+import classNames from 'classnames';
 import {
   Badge,
   Row,
   Col,
   Card,
   CardHeader,
+  CardFooter,
   CardBody,
-  Table,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Button,
-  Alert
+  Label,
+  Input,
+  Button
 } from 'reactstrap';
 
-function ListaUsuarios(props) {
-  const usuarios = props.usuarios
-  const listUsuarios = usuarios.map(usuario => <tr key={usuario.id}>
-    <td>{usuario.name}</td>
-    <td>{usuario.lastName}</td>
-    <td>{usuario.dni}</td>
-    <td>{usuario.role}</td>
-    <td>
-      <Badge onClick={() => editarPlato(plato)} color="success">Editar</Badge>
-    </td>
-  </tr>)
-  return listUsuarios
-}
 function editarPlato(e) {
   console.log(e)
 }
@@ -37,16 +22,31 @@ class ListarOrders extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listaUsuarios: []
-    };
+      listaOrdenes: [],
+      tiposEstado: []
+    }
+    this.BotonesCache = {}
     this.handleChange = this
       .handleChange
       .bind(this)
+    this.ColumnaEstadoOrden = this
+      .ColumnaEstadoOrden
+      .bind(this)
+    this.CardOrden = this
+      .CardOrden
+      .bind(this)
+    let listaPromesas = [
+      axios.get('EstadoOrdenes'),
+      axios.get('Ordenes/getOrderDetails')
+    ]
 
-    axios
-      .get('users')
-      .then(response => {
-        this.setState({listaUsuarios: response.data})
+    this.getBotonoesProceso = this.getBotonoesProceso.bind(this)
+
+    Promise
+      .all(listaPromesas)
+      .then((response) => {
+        this.setState({listaOrdenes: response[1].data})
+        this.setState({tiposEstado: response[0].data})
       })
   }
 
@@ -56,33 +56,84 @@ class ListarOrders extends Component {
     })
   }
 
+  getBotonoesProceso(EstadoOrdenId) {
+    let listaBotones = []
+    if (!this.BotonesCache[EstadoOrdenId]) {
+      this.BotonesCache[EstadoOrdenId] = []
+      
+      this
+        .state
+        .tiposEstado
+        .forEach(estado => {
+          if (estado.id !== EstadoOrdenId) {
+            this
+              .BotonesCache[EstadoOrdenId]
+              .push(<Button key={estado.id} className={classNames({
+                [estado.color]: true,
+                'float-right': true
+              })} type="button" color="primary">{estado.descripcion}</Button>)
+          }
+        })
+        
+    } 
+    return this.BotonesCache[EstadoOrdenId]
+  }
+
+  CardOrden(EstadoOrdenId) {
+
+    let listaCards = []
+    const BotonesHeader = this.getBotonoesProceso(EstadoOrdenId)
+    this
+      .state
+      .listaOrdenes
+      .forEach((orden) => {
+        if (orden.EstadoOrdenId === EstadoOrdenId) {
+          listaCards.push(
+            <Card key={orden.id} md="12">
+              <CardHeader>
+                {orden.NombreCliente}
+                {BotonesHeader}
+              </CardHeader>
+              <CardBody>
+                <Badge pill className="float-right badge-info">{orden.details.length}</Badge>
+                {orden.details[0].DetallePlato.nombre}
+              </CardBody>
+            </Card>
+          )
+        }
+      })
+    return listaCards
+  }
+  ColumnaEstadoOrden() {
+    return this
+      .state
+      .tiposEstado
+      .map(tipoEstado => {
+        return (
+          <Col
+            key={tipoEstado.id}
+            xs="12"
+            sm="6"
+            md="4"
+            className={classNames({
+            [tipoEstado.color]: true,
+            'p-2 text-dark': true
+          })}>
+            {tipoEstado.descripcion}
+            <Col md="12" className="p-0">
+              {this.CardOrden(tipoEstado.id)}
+            </Col>
+          </Col>
+        )
+      })
+
+  }
+
   render() {
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" lg="6">
-            <Card>
-              <CardHeader>
-                <i className="fa fa-align-justify"></i>
-                Lista de platos
-              </CardHeader>
-              <CardBody>
-                <Table responsive striped>
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Apellido</th>
-                      <th>DNI</th>
-                      <th>Rol</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <ListaUsuarios usuarios={this.state.listaUsuarios}></ListaUsuarios>
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
+          {this.ColumnaEstadoOrden()}
         </Row>
       </div>
     )
